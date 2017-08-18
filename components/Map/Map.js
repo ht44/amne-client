@@ -11,11 +11,14 @@ class Map extends Component {
   componentDidMount() {
 
     this.map = new google.maps.Map(this.container, {
-      center: {lat: -34.397, lng: 150.644},
+      center: {lat: 30.2729, lng: -97.7444},
       zoom: 8
     });
 
     this.bounds = new google.maps.LatLngBounds();
+
+    this.places = new google.maps.places.PlacesService(this.map);
+
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
@@ -28,44 +31,60 @@ class Map extends Component {
         console.log(this.map.getCenter());
       });
     } else {
-      console.log('no geolocation');
+      this.map.setCenter({
+        lat: 30.2729,
+        lng: -97.7444
+      });
     }
 
   }
 
   componentDidUpdate() {
 
-    this.bounds = new google.maps.LatLngBounds();
+    let infoWindow;
 
-    const {addressA, addressB} = this.props;
-
-    if (addressA) {
-
-      if (this.markerA) this.markerA.setMap(null);
-
-      this.markerA = new google.maps.Marker({
-        map: this.map,
-        title: addressA.formatted_address,
-        position: addressA.geometry.location
-      });
-
-      this.bounds.extend(this.markerA.position);
-      this.map.fitBounds(this.bounds);
+    if (this.props.addressA || this.props.addressB) {
+      this.bounds = new google.maps.LatLngBounds();
     }
 
-    if (addressB) {
+    for (let id in this.props) {
 
-      if (this.markerB) this.markerB.setMap(null);
+      if (this.props[id]) {
+        if (this[id]) this[id].setMap(null);
 
-      this.markerB = new google.maps.Marker({
-        map: this.map,
-        title: addressB.formatted_address,
-        position: addressB.geometry.location
-      });
+        this[id] = new google.maps.Marker({
+          map: this.map,
+          title: this.props[id].formatted_address,
+          position: this.props[id].geometry.location
+        });
 
-      this.bounds.extend(this.markerB.position);
-      this.map.fitBounds(this.bounds);
+        this[`info${id}`] = new google.maps.InfoWindow({
+          content: this.props[id].formatted_address
+        });
+
+        this[id].addListener('mouseover', (ev) => {
+          this[`info${id}`].open(this.map, this[id]);
+        });
+
+        this[id].addListener('mouseout', (ev) => {
+          this[`info${id}`].close();
+        });
+
+        this.bounds.extend(this[id].position);
+        this.map.fitBounds(this.bounds);
+      }
+
     }
+
+    this.places.nearbySearch({
+      location: this.map.getCenter(),
+      radius: 16093.4,
+      type: ['real_estate_agency']
+    }, (results, status) => {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        console.log(results);
+      }
+    });
 
   }
 
