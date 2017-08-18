@@ -12,6 +12,7 @@ class Map extends Component {
 
   componentDidMount() {
 
+
     this.map = new google.maps.Map(this.container, {
       center: {lat: 30.2729, lng: -97.7444},
       zoom: 8
@@ -53,11 +54,12 @@ class Map extends Component {
   componentDidUpdate() {
 
     let infoWindow,
+
     props = {
       addressA: this.props.addressA,
       addressB: this.props.addressB
     }
-
+    console.log(props);
     this.bounds = new google.maps.LatLngBounds();
     this.markers.forEach(marker => {
       marker.setMap(null);
@@ -65,7 +67,7 @@ class Map extends Component {
     this.markers = [];
     this.agencies = [];
 
-    for (let id in this.props) {
+    for (let id in props) {
 
       if (props[id]) {
         if (this.addresses[id]) this.addresses[id].setMap(null);
@@ -105,6 +107,18 @@ class Map extends Component {
         type: ['real_estate_agency']
       }, (results, status) => {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
+          results.forEach(result => {
+            result.sumDistance = 0;
+            for (let address in this.addresses) {
+              result.sumDistance += google.maps
+                                          .geometry
+                                          .spherical
+                                          .computeDistanceBetween(
+                                            this.addresses[address].position,
+                                            result.geometry.location
+                                          );
+            }
+          });
           resolve(results);
         } else {
           reject(status);
