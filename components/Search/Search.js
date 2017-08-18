@@ -35,11 +35,6 @@ class Search extends Component {
 
   }
 
-  // handleSubmit(ev) {
-  //   console.log('submitteddd');
-  //   ev.preventDefault();
-  // }
-
   render() {
     return (
       <div className="Search">
@@ -48,14 +43,12 @@ class Search extends Component {
             type="text"
             name="inputA"
             placeholder="Address A"
-            ref={(input) => { this.inputA = input; }}
-            onChange={this.handleChange} />
+            ref={(input) => { this.inputA = input; }} />
           <input
             type="text"
             name="inputB"
             placeholder="Address B"
-            ref={(input) => { this.inputB = input; }}
-            onChange={this.handleChange} />
+            ref={(input) => { this.inputB = input; }} />
           <input type="submit" value="Submit" />
         </form>
       </div>

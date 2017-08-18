@@ -8,8 +8,7 @@ class App extends Component {
     super(props);
     this.state = {
       addressA: null,
-      addressB: null,
-      search: false
+      addressB: null
     }
     this.updateAddress = this.updateAddress.bind(this);
     this.runSearch = this.runSearch.bind(this);
@@ -24,7 +23,9 @@ class App extends Component {
   }
 
   runSearch(ev) {
-    this.map.runSearch();
+    if (this.state.addressA && this.state.addressB) {
+      this.map.runSearch();
+    }
     ev.preventDefault();
   }
 

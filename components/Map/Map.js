@@ -6,6 +6,8 @@ class Map extends Component {
    constructor(props) {
      super(props);
      this.agencies = [];
+     this.markers = [];
+     this.addresses = {};
    }
 
   componentDidMount() {
@@ -38,10 +40,6 @@ class Map extends Component {
 
   }
 
-  // shouldComponentUpdate() {
-  //
-  // }
-
   componentDidUpdate() {
 
     if (this.props.addressA || this.props.addressB) {
@@ -53,11 +51,12 @@ class Map extends Component {
       for (let id in this.props) {
 
         if (this.props[id]) {
-          if (this[id]) this[id].setMap(null);
+          if (this.addresses[id]) this.addresses[id].setMap(null);
 
-          this[id] = new google.maps.Marker({
+          this.addresses[id] = new google.maps.Marker({
             map: this.map,
             title: this.props[id].formatted_address,
+            animation: google.maps.Animation.DROP,
             position: this.props[id].geometry.location
           });
 
@@ -65,15 +64,15 @@ class Map extends Component {
             content: this.props[id].formatted_address
           });
 
-          this[id].addListener('mouseover', (ev) => {
-            this[`info${id}`].open(this.map, this[id]);
+          this.addresses[id].addListener('mouseover', (ev) => {
+            this[`info${id}`].open(this.map, this.addresses[id]);
           });
 
-          this[id].addListener('mouseout', (ev) => {
+          this.addresses[id].addListener('mouseout', (ev) => {
             this[`info${id}`].close();
           });
 
-          this.bounds.extend(this[id].position);
+          this.bounds.extend(this.addresses[id].position);
           this.map.fitBounds(this.bounds);
         }
 
@@ -83,25 +82,44 @@ class Map extends Component {
 
   }
 
+  searchNearby(address) {
+    return new Promise((resolve, reject) => {
+      this.places.nearbySearch({
+        location: address.position,
+        radius: 16093.4,
+        type: ['real_estate_agency']
+      }, (results, status) => {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          resolve(results);
+        } else {
+          reject(status);
+        }
+      });
+    });
+  }
+
   runSearch() {
 
-    this.places.nearbySearch({
-      location: this.map.getCenter(),
-      radius: 16093.4,
-      type: ['real_estate_agency']
-    }, (results, status) => {
-      if (status == google.maps.places.PlacesServiceStatus.OK) {
-        this.agencies = this.agencies.concat(results);
-        console.log(this.agencies);
-      }
-    });
+    const promises = [
+      this.searchNearby(this.addresses.addressA),
+      this.searchNearby(this.addresses.addressB)
+    ];
 
+    Promise.all(promises).then(data => {
+      this.agencies = data[0].concat(data[1]);
+      this.markers = this.agencies.map(agency => {
+        return new google.maps.Marker({
+          map: this.map,
+          position: agency.geometry.location
+        });
+      });
+    });
+    
   }
 
   render() {
     return (
-      <div className="Map"
-        ref={(div) => { this.container = div; }} >
+      <div className="Map" ref={(div) => { this.container = div; }}>
       </div>
     );
   }
