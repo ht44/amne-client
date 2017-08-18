@@ -8,10 +8,12 @@ class App extends Component {
     super(props);
     this.state = {
       addressA: null,
-      addressB: null
-    }
+      addressB: null,
+      agencies: []
+    };
     this.updateAddress = this.updateAddress.bind(this);
     this.runSearch = this.runSearch.bind(this);
+    this.broadcastResults = this.broadcastResults.bind(this);
   }
 
   updateAddress(address) {
@@ -29,6 +31,11 @@ class App extends Component {
     ev.preventDefault();
   }
 
+  broadcastResults(agencies) {
+    this.setState({agencies: agencies});
+    console.log(this.state.agencies);
+  }
+
 
   render() {
     return (
@@ -39,7 +46,8 @@ class App extends Component {
         <Map
           ref={instance => { this.map = instance; }}
           addressA={this.state.addressA}
-          addressB={this.state.addressB} />
+          addressB={this.state.addressB}
+          broadcastResults={this.broadcastResults} />
       </div>
     );
   }

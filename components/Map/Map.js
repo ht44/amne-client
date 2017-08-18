@@ -18,7 +18,6 @@ class Map extends Component {
     });
 
     this.bounds = new google.maps.LatLngBounds();
-
     this.places = new google.maps.places.PlacesService(this.map);
 
     if (navigator.geolocation) {
@@ -40,42 +39,58 @@ class Map extends Component {
 
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextProps.addressA !== this.props.addressA ||
+      nextProps.addressB !== this.props.addressB
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   componentDidUpdate() {
 
-    if (this.props.addressA || this.props.addressB) {
+    let infoWindow,
+    props = {
+      addressA: this.props.addressA,
+      addressB: this.props.addressB
+    }
 
-      let infoWindow;
+    this.bounds = new google.maps.LatLngBounds();
+    this.markers.forEach(marker => {
+      marker.setMap(null);
+    });
+    this.markers = [];
+    this.agencies = [];
 
-      this.bounds = new google.maps.LatLngBounds();
+    for (let id in this.props) {
 
-      for (let id in this.props) {
+      if (props[id]) {
+        if (this.addresses[id]) this.addresses[id].setMap(null);
 
-        if (this.props[id]) {
-          if (this.addresses[id]) this.addresses[id].setMap(null);
+        this.addresses[id] = new google.maps.Marker({
+          map: this.map,
+          title: props[id].formatted_address,
+          animation: google.maps.Animation.DROP,
+          position: props[id].geometry.location
+        });
 
-          this.addresses[id] = new google.maps.Marker({
-            map: this.map,
-            title: this.props[id].formatted_address,
-            animation: google.maps.Animation.DROP,
-            position: this.props[id].geometry.location
-          });
+        this[`info${id}`] = new google.maps.InfoWindow({
+          content: props[id].formatted_address
+        });
 
-          this[`info${id}`] = new google.maps.InfoWindow({
-            content: this.props[id].formatted_address
-          });
+        this.addresses[id].addListener('mouseover', (ev) => {
+          this[`info${id}`].open(this.map, this.addresses[id]);
+        });
 
-          this.addresses[id].addListener('mouseover', (ev) => {
-            this[`info${id}`].open(this.map, this.addresses[id]);
-          });
+        this.addresses[id].addListener('mouseout', (ev) => {
+          this[`info${id}`].close();
+        });
 
-          this.addresses[id].addListener('mouseout', (ev) => {
-            this[`info${id}`].close();
-          });
-
-          this.bounds.extend(this.addresses[id].position);
-          this.map.fitBounds(this.bounds);
-        }
-
+        this.bounds.extend(this.addresses[id].position);
+        this.map.fitBounds(this.bounds);
       }
 
     }
@@ -114,10 +129,7 @@ class Map extends Component {
         });
         let marker = new google.maps.Marker({
           map: this.map,
-          icon: {
-            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-            scale: 4
-          },
+          icon: '/home.png',
           position: agency.geometry.location
         });
         marker.addListener('mouseover', ev => {
@@ -129,8 +141,8 @@ class Map extends Component {
         return marker;
       });
       this.map.fitBounds(this.bounds);
+      this.props.broadcastResults(this.agencies);
     });
-
   }
 
   render() {
