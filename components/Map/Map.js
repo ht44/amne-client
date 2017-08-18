@@ -127,6 +127,15 @@ class Map extends Component {
     });
   }
 
+  linearSearch(arr, name) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].name === name) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   runSearch() {
 
     const promises = [
@@ -135,7 +144,12 @@ class Map extends Component {
     ];
 
     Promise.all(promises).then(data => {
-      this.agencies = data[0].concat(data[1]);
+      console.log('agencies', this.agencies);
+      data[0].concat(data[1]).forEach(agency => {
+        if (this.linearSearch(this.agencies, agency.name) === -1) {
+          this.agencies.push(agency);
+        }
+      });
       this.markers = this.agencies.map((agency, index) => {
         this.bounds.extend(agency.geometry.location);
         let infoWindow = new google.maps.InfoWindow({
