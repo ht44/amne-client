@@ -3,10 +3,10 @@ import './Map.css';
 
 class Map extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+   constructor(props) {
+     super(props);
+     this.agencies = [];
+   }
 
   componentDidMount() {
 
@@ -18,7 +18,6 @@ class Map extends Component {
     this.bounds = new google.maps.LatLngBounds();
 
     this.places = new google.maps.places.PlacesService(this.map);
-
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
@@ -39,42 +38,52 @@ class Map extends Component {
 
   }
 
+  // shouldComponentUpdate() {
+  //
+  // }
+
   componentDidUpdate() {
 
-    let infoWindow;
-
     if (this.props.addressA || this.props.addressB) {
+
+      let infoWindow;
+
       this.bounds = new google.maps.LatLngBounds();
-    }
 
-    for (let id in this.props) {
+      for (let id in this.props) {
 
-      if (this.props[id]) {
-        if (this[id]) this[id].setMap(null);
+        if (this.props[id]) {
+          if (this[id]) this[id].setMap(null);
 
-        this[id] = new google.maps.Marker({
-          map: this.map,
-          title: this.props[id].formatted_address,
-          position: this.props[id].geometry.location
-        });
+          this[id] = new google.maps.Marker({
+            map: this.map,
+            title: this.props[id].formatted_address,
+            position: this.props[id].geometry.location
+          });
 
-        this[`info${id}`] = new google.maps.InfoWindow({
-          content: this.props[id].formatted_address
-        });
+          this[`info${id}`] = new google.maps.InfoWindow({
+            content: this.props[id].formatted_address
+          });
 
-        this[id].addListener('mouseover', (ev) => {
-          this[`info${id}`].open(this.map, this[id]);
-        });
+          this[id].addListener('mouseover', (ev) => {
+            this[`info${id}`].open(this.map, this[id]);
+          });
 
-        this[id].addListener('mouseout', (ev) => {
-          this[`info${id}`].close();
-        });
+          this[id].addListener('mouseout', (ev) => {
+            this[`info${id}`].close();
+          });
 
-        this.bounds.extend(this[id].position);
-        this.map.fitBounds(this.bounds);
+          this.bounds.extend(this[id].position);
+          this.map.fitBounds(this.bounds);
+        }
+
       }
 
     }
+
+  }
+
+  runSearch() {
 
     this.places.nearbySearch({
       location: this.map.getCenter(),
@@ -82,7 +91,8 @@ class Map extends Component {
       type: ['real_estate_agency']
     }, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
-        console.log(results);
+        this.agencies = this.agencies.concat(results);
+        console.log(this.agencies);
       }
     });
 

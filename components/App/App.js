@@ -8,9 +8,11 @@ class App extends Component {
     super(props);
     this.state = {
       addressA: null,
-      addressB: null
+      addressB: null,
+      search: false
     }
     this.updateAddress = this.updateAddress.bind(this);
+    this.runSearch = this.runSearch.bind(this);
   }
 
   updateAddress(address) {
@@ -20,11 +22,21 @@ class App extends Component {
       this.setState({addressB: address.place});
     }
   }
+
+  runSearch(ev) {
+    this.map.runSearch();
+    ev.preventDefault();
+  }
+
+
   render() {
     return (
       <div className="App">
-        <Search updateAddress={this.updateAddress}/>
+        <Search
+          runSearch={this.runSearch}
+          updateAddress={this.updateAddress}/>
         <Map
+          ref={instance => { this.map = instance; }}
           addressA={this.state.addressA}
           addressB={this.state.addressB} />
       </div>

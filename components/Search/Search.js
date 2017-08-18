@@ -4,7 +4,7 @@ import './Search.css';
 class Search extends Component {
   constructor(props) {
     super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -35,14 +35,15 @@ class Search extends Component {
 
   }
 
-  handleSubmit(ev) {
-    console.log('submitteddd');
-    ev.preventDefault();
-  }
+  // handleSubmit(ev) {
+  //   console.log('submitteddd');
+  //   ev.preventDefault();
+  // }
+
   render() {
     return (
       <div className="Search">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={ev => this.props.runSearch(ev)}>
           <input
             type="text"
             name="inputA"
