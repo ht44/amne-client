@@ -59,7 +59,6 @@ class Map extends Component {
       addressA: this.props.addressA,
       addressB: this.props.addressB
     }
-    console.log(props);
     this.bounds = new google.maps.LatLngBounds();
     this.markers.forEach(marker => {
       marker.setMap(null);
@@ -99,6 +98,31 @@ class Map extends Component {
 
   }
 
+  xmlHttpPromise(places) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'http://localhost:3000/places');
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+      xhr.onload = () => resolve(xhr.responseText);
+      xhr.onerror = () => reject(xhr.statusText);
+      xhr.send(JSON.stringify({places: places}));
+    });
+  };
+
+  getDetails(placeId) {
+
+    return new Promise((resolve, reject) => {
+      this.places.getDetails({placeId: placeId}, (details, status) => {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          resolve(details);
+        } else {
+          resolve(status);
+        }
+      });
+    });
+  }
+
   searchNearby(address) {
     return new Promise((resolve, reject) => {
       this.places.nearbySearch({
@@ -107,8 +131,9 @@ class Map extends Component {
         type: ['real_estate_agency']
       }, (results, status) => {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-          results.forEach(result => {
+          results.forEach((result, index) => {
             result.sumDistance = 0;
+            result.details = this.getDetails(result.place_id, index);
             for (let address in this.addresses) {
               result.sumDistance += google.maps
                                           .geometry
@@ -144,8 +169,15 @@ class Map extends Component {
     ];
 
     Promise.all(promises).then(data => {
-      console.log('agencies', this.agencies);
-      data[0].concat(data[1]).forEach(agency => {
+
+      const agencies = data[0].concat(data[1]);
+      this.xmlHttpPromise(
+        agencies.map(agency => agency.place_id)
+      ).then(data => {
+        console.log(JSON.parse(data));
+      });
+
+      agencies.forEach(agency => {
         if (this.linearSearch(this.agencies, agency.name) === -1) {
           this.agencies.push(agency);
         }

@@ -2,16 +2,6 @@ import React, { Component } from 'react';
 import './Display.css';
 
 class Display extends Component {
-  constructor(props) {
-    super(props);
-    // this.state = {
-    //   sorted: []
-    // }
-  }
-
-  // componentWillRecieveProps() {
-  //   this.setState({sorted: this.mergeSort(this.props.results)});
-  // }
 
   metersToMiles(value) {
     return (value * 0.000621371).toFixed(1);
@@ -20,8 +10,8 @@ class Display extends Component {
 
   render() {
     const results = this.props.results.map(result =>
-      <li>
-        {result.name}: {this.metersToMiles(result.sumDistance)} mi
+      <li key={result.place_id}>
+        {result.website}: {this.metersToMiles(result.sumDistance)} mi
       </li>
     );
     return (
