@@ -107,14 +107,30 @@ class Map extends Component {
 
     Promise.all(promises).then(data => {
       this.agencies = data[0].concat(data[1]);
-      this.markers = this.agencies.map(agency => {
-        return new google.maps.Marker({
+      this.markers = this.agencies.map((agency, index) => {
+        this.bounds.extend(agency.geometry.location);
+        let infoWindow = new google.maps.InfoWindow({
+          content: agency.name
+        });
+        let marker = new google.maps.Marker({
           map: this.map,
+          icon: {
+            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+            scale: 4
+          },
           position: agency.geometry.location
         });
+        marker.addListener('mouseover', ev => {
+          infoWindow.open(this.map, marker);
+        });
+        marker.addListener('mouseout', ev => {
+          infoWindow.close();
+        });
+        return marker;
       });
+      this.map.fitBounds(this.bounds);
     });
-    
+
   }
 
   render() {
