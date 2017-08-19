@@ -2,6 +2,10 @@
   width: 500px;
   display: flex;
   justify-content: space-between;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
 }
 
 .Search > form {

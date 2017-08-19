@@ -80,14 +80,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Search
-          runSearch={this.runSearch}
-          updateAddress={this.updateAddress}/>
-        <Map
-          ref={instance => { this.map = instance; }}
-          addressA={this.state.addressA}
-          addressB={this.state.addressB}
-          broadcastResults={this.broadcastResults} />
+        <div className="controller">
+          <Search
+            runSearch={this.runSearch}
+            updateAddress={this.updateAddress}/>
+          <Map
+            ref={instance => { this.map = instance; }}
+            addressA={this.state.addressA}
+            addressB={this.state.addressB}
+            broadcastResults={this.broadcastResults} />
+        </div>
         <Display results={this.state.results}/>
       </div>
     );

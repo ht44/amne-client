@@ -15,9 +15,24 @@ class Map extends Component {
 
     this.map = new google.maps.Map(this.container, {
       center: {lat: 30.2729, lng: -97.7444},
-      zoom: 8
+      zoom: 8,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.TOP_RIGHT
+      },
+      zoomControl: true,
+      zoomControlOptions: {
+          position: google.maps.ControlPosition.LEFT_CENTER
+      },
+      scaleControl: true,
+      // streetViewControl: true,
+      // streetViewControlOptions: {
+      //     position: google.maps.ControlPosition.LEFT_TOP
+      // },
+      fullscreenControl: false
     });
-
+    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input)
     this.bounds = new google.maps.LatLngBounds();
     this.places = new google.maps.places.PlacesService(this.map);
 
