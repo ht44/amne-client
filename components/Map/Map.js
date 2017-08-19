@@ -110,19 +110,6 @@ class Map extends Component {
     });
   };
 
-  getDetails(placeId) {
-
-    return new Promise((resolve, reject) => {
-      this.places.getDetails({placeId: placeId}, (details, status) => {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
-          resolve(details);
-        } else {
-          resolve(status);
-        }
-      });
-    });
-  }
-
   searchNearby(address) {
     return new Promise((resolve, reject) => {
       this.places.nearbySearch({
@@ -133,7 +120,6 @@ class Map extends Component {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
           results.forEach((result, index) => {
             result.sumDistance = 0;
-            result.details = this.getDetails(result.place_id, index);
             for (let address in this.addresses) {
               result.sumDistance += google.maps
                                           .geometry
@@ -161,6 +147,29 @@ class Map extends Component {
     return -1;
   }
 
+  populateMap() {
+    this.markers = this.agencies.map((agency, index) => {
+      this.bounds.extend(agency.geometry.location);
+      let infoWindow = new google.maps.InfoWindow({
+        content: agency.name
+      });
+      let marker = new google.maps.Marker({
+        map: this.map,
+        icon: '/home.png',
+        position: agency.geometry.location
+      });
+      marker.addListener('mouseover', ev => {
+        infoWindow.open(this.map, marker);
+      });
+      marker.addListener('mouseout', ev => {
+        infoWindow.close();
+      });
+      return marker;
+    });
+    this.map.fitBounds(this.bounds);
+    this.props.broadcastResults(this.agencies);
+  }
+
   runSearch() {
 
     const promises = [
@@ -168,41 +177,27 @@ class Map extends Component {
       this.searchNearby(this.addresses.addressB)
     ];
 
-    Promise.all(promises).then(data => {
-
-      const agencies = data[0].concat(data[1]);
-      this.xmlHttpPromise(
-        agencies.map(agency => agency.place_id)
-      ).then(data => {
-        console.log(JSON.parse(data));
-      });
-
-      agencies.forEach(agency => {
-        if (this.linearSearch(this.agencies, agency.name) === -1) {
-          this.agencies.push(agency);
-        }
-      });
-      this.markers = this.agencies.map((agency, index) => {
-        this.bounds.extend(agency.geometry.location);
-        let infoWindow = new google.maps.InfoWindow({
-          content: agency.name
-        });
-        let marker = new google.maps.Marker({
-          map: this.map,
-          icon: '/home.png',
-          position: agency.geometry.location
-        });
-        marker.addListener('mouseover', ev => {
-          infoWindow.open(this.map, marker);
-        });
-        marker.addListener('mouseout', ev => {
-          infoWindow.close();
-        });
-        return marker;
-      });
-      this.map.fitBounds(this.bounds);
-      this.props.broadcastResults(this.agencies);
-    });
+    Promise.all(promises)
+           .then(data => {
+             return data[0].concat(data[1]);
+           })
+           .then(data => {
+             data.forEach(datum => {
+               if (this.linearSearch(this.agencies, datum.name) === -1) {
+                 this.agencies.push(datum);
+               }
+             });
+             return this.xmlHttpPromise(
+               this.agencies.map(agency => agency.place_id)
+             );
+           })
+           .then(data => {
+             let parsed = JSON.parse(data);
+             parsed.result.forEach((result, index) => {
+               this.agencies[index].website = result;
+             });
+             this.populateMap();
+           });
   }
 
   render() {

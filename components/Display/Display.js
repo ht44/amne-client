@@ -11,7 +11,9 @@ class Display extends Component {
   render() {
     const results = this.props.results.map(result =>
       <li key={result.place_id}>
-        {result.website}: {this.metersToMiles(result.sumDistance)} mi
+        <a href={result.website} target="_blank">
+          {result.name}
+        </a>: {this.metersToMiles(result.sumDistance)} mi
       </li>
     );
     return (
