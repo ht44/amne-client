@@ -1,8 +1,8 @@
 .Display {
   width: 500px;
-  height: 100vh;
+  height: calc(100vh - 33px);
   min-width: 250px;
-  border: 1px solid black;
+  border-left: 1px solid black;
   overflow: scroll;
   padding: 1em;
 }
