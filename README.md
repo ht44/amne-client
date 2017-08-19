@@ -12,6 +12,6 @@ Integrating third-party DOM APIs with React is always interesting; if you see a 
 
 To more efficiently get the details necessary for linking to the agencies' websites, I also developed a Node.js / Express microservice for handling batch requests to the Google Maps Web Service API. If I had done this on the client, using the Google Maps JavaScript API, I would have had to throttle my requests to avoid surpassing my rate limit, resulting in a slower load time. The server-side API allows 50 requests-per-second, which was more than enough for my purposes.
 
-The service is accepting cross-origin POST requests at http://amne-micro.us-west-2.elasticbeanstalk.com/places if you want to try it out. Source code at https://github.com/ht44/amne-microservice.
+The service is accepting cross-origin POST requests at http://amne-micro.us-west-2.elasticbeanstalk.com/places if you want to try it out. Post an array of up to 50 Google "Place Ids" set to key "places" and the service will return details for each place. Source code at https://github.com/ht44/amne-microservice.
 
 It was an extra step, but it made a lot of difference in the end.
