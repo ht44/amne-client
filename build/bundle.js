@@ -23715,7 +23715,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".Display {\n  width: 500px;\n  height: 100vh;\n  min-width: 250px;\n  border: 1px solid black;\n  overflow: scroll;\n  padding: 1em;\n}\n\n.Display ul {\n  display: flex;\n  flex-flow: column wrap;\n  justify-content: space-between;\n}\n\n.Display li {\n  cursor: default;\n}\n\n.Display a {\n  text-decoration: none;\n}\n", ""]);
+exports.push([module.i, ".Display {\n  width: 500px;\n  height: calc(100vh - 33px);\n  min-width: 250px;\n  border-left: 1px solid black;\n  overflow: scroll;\n  padding: 1em;\n}\n\n.Display ul {\n  display: flex;\n  flex-flow: column wrap;\n  justify-content: space-between;\n}\n\n.Display li {\n  cursor: default;\n}\n\n.Display a {\n  text-decoration: none;\n}\n", ""]);
 
 // exports
 

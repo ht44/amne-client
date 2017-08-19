@@ -30,24 +30,10 @@ class Map extends Component {
     });
     this.bounds = new google.maps.LatLngBounds();
     this.places = new google.maps.places.PlacesService(this.map);
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        const pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-        this.map.setCenter(pos);
-      }, () => {
-        console.log(this.map.getCenter());
-      });
-    } else {
-      this.map.setCenter({
-        lat: 30.2729,
-        lng: -97.7444
-      });
-    }
-
+    this.map.setCenter({
+      lat: 30.2729,
+      lng: -97.7444
+    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -201,8 +187,12 @@ class Map extends Component {
                this.agencies.map(agency => agency.place_id)
              );
            })
+           .catch(error => {
+             console.log(error);
+           })
            .then(data => {
              let parsed = JSON.parse(data);
+             console.log(parsed);
              parsed.result.forEach((result, index) => {
                this.agencies[index].website = result;
              });
