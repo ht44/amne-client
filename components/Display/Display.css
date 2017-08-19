@@ -1,6 +1,7 @@
 .Display {
   width: 500px;
   height: 100vh;
+  min-width: 250px;
   border: 1px solid black;
   overflow: scroll;
 }
@@ -13,4 +14,8 @@
 
 .Display li {
   cursor: default;
+}
+
+.Display a {
+  text-decoration: none;
 }
