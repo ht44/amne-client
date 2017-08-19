@@ -23601,6 +23601,16 @@ var Display = function (_Component) {
   }
 
   _createClass(Display, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.show = true;
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps() {
+      this.show = false;
+    }
+  }, {
     key: 'metersToMiles',
     value: function metersToMiles(value) {
       return (value * 0.000621371).toFixed(1);
@@ -23627,6 +23637,30 @@ var Display = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'Display' },
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'h1',
+            null,
+            'Welcome!'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'Enter two addresses and hit \'Submit\' for a list of nearby agencies.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'Results will render on the map, and will be sorted and displayed below.'
+          ),
+          _react2.default.createElement(
+            'p',
+            null,
+            'If a result is not hyperlinked, that means that the business listing on Google did not include a website URL.'
+          )
+        ),
         _react2.default.createElement(
           'ol',
           null,
@@ -23681,7 +23715,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".Display {\n  width: 500px;\n  height: 100vh;\n  min-width: 250px;\n  border: 1px solid black;\n  overflow: scroll;\n}\n\n.Display ul {\n  display: flex;\n  flex-flow: column wrap;\n  justify-content: space-between;\n}\n\n.Display li {\n  cursor: default;\n}\n\n.Display a {\n  text-decoration: none;\n}\n", ""]);
+exports.push([module.i, ".Display {\n  width: 500px;\n  height: 100vh;\n  min-width: 250px;\n  border: 1px solid black;\n  overflow: scroll;\n  padding: 1em;\n}\n\n.Display ul {\n  display: flex;\n  flex-flow: column wrap;\n  justify-content: space-between;\n}\n\n.Display li {\n  cursor: default;\n}\n\n.Display a {\n  text-decoration: none;\n}\n", ""]);
 
 // exports
 
