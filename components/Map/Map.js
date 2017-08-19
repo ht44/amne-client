@@ -111,7 +111,7 @@ class Map extends Component {
   xmlHttpPromise(places) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://localhost:3000/places');
+      xhr.open('POST', 'http://amne-micro.us-west-2.elasticbeanstalk.com/places');
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
       xhr.onload = () => resolve(xhr.responseText);
