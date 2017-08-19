@@ -192,7 +192,6 @@ class Map extends Component {
            })
            .then(data => {
              let parsed = JSON.parse(data);
-             console.log(parsed);
              parsed.result.forEach((result, index) => {
                this.agencies[index].website = result;
              });

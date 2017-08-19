@@ -11,10 +11,13 @@
 }
 
 .Search input[type="text"] {
-  width: 200px;
+  box-sizing: border-box;
+  width: 50%;
+  height: 25px;
 }
 
 .Search input[type="submit"] {
+  height: 27px;
   background-color: rgb(20, 53, 48);
   color: white;
   width: 412px;

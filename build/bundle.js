@@ -23216,7 +23216,6 @@ var Map = function (_Component) {
         console.log(error);
       }).then(function (data) {
         var parsed = JSON.parse(data);
-        console.log(parsed);
         parsed.result.forEach(function (result, index) {
           _this5.agencies[index].website = result;
         });
@@ -23548,7 +23547,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".Search {\n  width: 412px;\n  display: flex;\n  justify-content: space-between;\n  position: absolute;\n  top: 8px;\n  left: 8px;\n  z-index: 2;\n  border: 1px outset black;\n  box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.14);\n}\n\n.Search input[type=\"text\"] {\n  width: 200px;\n}\n\n.Search input[type=\"submit\"] {\n  background-color: rgb(20, 53, 48);\n  color: white;\n  width: 412px;\n}\n\n.Search input[type=\"submit\"]:focus {\n  outline: 0;\n}\n", ""]);
+exports.push([module.i, ".Search {\n  width: 412px;\n  display: flex;\n  justify-content: space-between;\n  position: absolute;\n  top: 8px;\n  left: 8px;\n  z-index: 2;\n  border: 1px outset black;\n  box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.14);\n}\n\n.Search input[type=\"text\"] {\n  box-sizing: border-box;\n  width: 50%;\n  height: 25px;\n}\n\n.Search input[type=\"submit\"] {\n  height: 27px;\n  background-color: rgb(20, 53, 48);\n  color: white;\n  width: 412px;\n}\n\n.Search input[type=\"submit\"]:focus {\n  outline: 0;\n}\n", ""]);
 
 // exports
 
@@ -23794,7 +23793,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Roboto);", ""]);
 
 // module
-exports.push([module.i, "body {\n  margin: 0;\n  padding: 0;\n  width: 100vw;\n  height: 100vh;\n  box-sizing: border-box;\n  font-family: 'Roboto', sans-serif;\n}\n", ""]);
+exports.push([module.i, "body {\n  margin: 0;\n  padding: 0;\n  width: 100vw;\n  height: 100vh;\n  /*box-sizing: border-box;*/\n  font-family: 'Roboto', sans-serif;\n}\n", ""]);
 
 // exports
 
