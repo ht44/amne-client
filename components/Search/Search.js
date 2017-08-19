@@ -60,6 +60,7 @@ class Search extends Component {
     return (
       <div className="Search">
         <form onSubmit={ev => this.submit(ev)}>
+          <input type="submit" value="Run Search" />
           <input
             type="text"
             name="inputA"
@@ -70,7 +71,6 @@ class Search extends Component {
             name="inputB"
             placeholder="Address B"
             ref={(input) => { this.inputB = input; }} />
-          <input type="submit" value="Submit" />
         </form>
       </div>
     )

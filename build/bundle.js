@@ -23034,7 +23034,6 @@ var Map = function (_Component) {
   _createClass(Map, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
 
       this.map = new google.maps.Map(this.container, {
         center: { lat: 30.2729, lng: -97.7444 },
@@ -23053,23 +23052,10 @@ var Map = function (_Component) {
       });
       this.bounds = new google.maps.LatLngBounds();
       this.places = new google.maps.places.PlacesService(this.map);
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          _this2.map.setCenter(pos);
-        }, function () {
-          console.log(_this2.map.getCenter());
-        });
-      } else {
-        this.map.setCenter({
-          lat: 30.2729,
-          lng: -97.7444
-        });
-      }
+      this.map.setCenter({
+        lat: 30.2729,
+        lng: -97.7444
+      });
     }
   }, {
     key: 'shouldComponentUpdate',
@@ -23083,7 +23069,7 @@ var Map = function (_Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
-      var _this3 = this;
+      var _this2 = this;
 
       var infoWindow = void 0,
           props = {
@@ -23100,29 +23086,29 @@ var Map = function (_Component) {
       var _loop = function _loop(id) {
 
         if (props[id]) {
-          if (_this3.addresses[id]) _this3.addresses[id].setMap(null);
+          if (_this2.addresses[id]) _this2.addresses[id].setMap(null);
 
-          _this3.addresses[id] = new google.maps.Marker({
-            map: _this3.map,
+          _this2.addresses[id] = new google.maps.Marker({
+            map: _this2.map,
             title: props[id].formatted_address,
             animation: google.maps.Animation.DROP,
             position: props[id].geometry.location
           });
 
-          _this3['info' + id] = new google.maps.InfoWindow({
+          _this2['info' + id] = new google.maps.InfoWindow({
             content: props[id].formatted_address
           });
 
-          _this3.addresses[id].addListener('mouseover', function (ev) {
-            _this3['info' + id].open(_this3.map, _this3.addresses[id]);
+          _this2.addresses[id].addListener('mouseover', function (ev) {
+            _this2['info' + id].open(_this2.map, _this2.addresses[id]);
           });
 
-          _this3.addresses[id].addListener('mouseout', function (ev) {
-            _this3['info' + id].close();
+          _this2.addresses[id].addListener('mouseout', function (ev) {
+            _this2['info' + id].close();
           });
 
-          _this3.bounds.extend(_this3.addresses[id].position);
-          _this3.map.fitBounds(_this3.bounds);
+          _this2.bounds.extend(_this2.addresses[id].position);
+          _this2.map.fitBounds(_this2.bounds);
         }
       };
 
@@ -23150,10 +23136,10 @@ var Map = function (_Component) {
   }, {
     key: 'searchNearby',
     value: function searchNearby(address) {
-      var _this4 = this;
+      var _this3 = this;
 
       return new Promise(function (resolve, reject) {
-        _this4.places.nearbySearch({
+        _this3.places.nearbySearch({
           location: address.position,
           radius: 16093.4,
           type: ['real_estate_agency']
@@ -23161,8 +23147,8 @@ var Map = function (_Component) {
           if (status == google.maps.places.PlacesServiceStatus.OK) {
             results.forEach(function (result, index) {
               result.sumDistance = 0;
-              for (var _address in _this4.addresses) {
-                result.sumDistance += google.maps.geometry.spherical.computeDistanceBetween(_this4.addresses[_address].position, result.geometry.location);
+              for (var _address in _this3.addresses) {
+                result.sumDistance += google.maps.geometry.spherical.computeDistanceBetween(_this3.addresses[_address].position, result.geometry.location);
               }
             });
             resolve(results);
@@ -23185,20 +23171,20 @@ var Map = function (_Component) {
   }, {
     key: 'populateMap',
     value: function populateMap() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.markers = this.agencies.map(function (agency, index) {
-        _this5.bounds.extend(agency.geometry.location);
+        _this4.bounds.extend(agency.geometry.location);
         var infoWindow = new google.maps.InfoWindow({
           content: agency.name
         });
         var marker = new google.maps.Marker({
-          map: _this5.map,
+          map: _this4.map,
           icon: '/home.png',
           position: agency.geometry.location
         });
         marker.addListener('mouseover', function (ev) {
-          infoWindow.open(_this5.map, marker);
+          infoWindow.open(_this4.map, marker);
         });
         marker.addListener('mouseout', function (ev) {
           infoWindow.close();
@@ -23211,7 +23197,7 @@ var Map = function (_Component) {
   }, {
     key: 'runSearch',
     value: function runSearch() {
-      var _this6 = this;
+      var _this5 = this;
 
       var promises = [this.searchNearby(this.addresses.addressA), this.searchNearby(this.addresses.addressB)];
 
@@ -23219,28 +23205,31 @@ var Map = function (_Component) {
         return data[0].concat(data[1]);
       }).then(function (data) {
         data.forEach(function (datum) {
-          if (_this6.linearSearch(_this6.agencies, datum.name) === -1) {
-            _this6.agencies.push(datum);
+          if (_this5.linearSearch(_this5.agencies, datum.name) === -1) {
+            _this5.agencies.push(datum);
           }
         });
-        return _this6.xmlHttpPromise(_this6.agencies.map(function (agency) {
+        return _this5.xmlHttpPromise(_this5.agencies.map(function (agency) {
           return agency.place_id;
         }));
+      }).catch(function (error) {
+        console.log(error);
       }).then(function (data) {
         var parsed = JSON.parse(data);
+        console.log(parsed);
         parsed.result.forEach(function (result, index) {
-          _this6.agencies[index].website = result;
+          _this5.agencies[index].website = result;
         });
-        _this6.populateMap();
+        _this5.populateMap();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this7 = this;
+      var _this6 = this;
 
       return _react2.default.createElement('div', { className: 'Map', ref: function ref(div) {
-          _this7.container = div;
+          _this6.container = div;
         } });
     }
   }]);
@@ -23494,6 +23483,7 @@ var Search = function (_Component) {
           { onSubmit: function onSubmit(ev) {
               return _this3.submit(ev);
             } },
+          _react2.default.createElement('input', { type: 'submit', value: 'Run Search' }),
           _react2.default.createElement('input', {
             type: 'text',
             name: 'inputA',
@@ -23507,8 +23497,7 @@ var Search = function (_Component) {
             placeholder: 'Address B',
             ref: function ref(input) {
               _this3.inputB = input;
-            } }),
-          _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+            } })
         )
       );
     }
@@ -23559,7 +23548,7 @@ exports = module.exports = __webpack_require__(25)(undefined);
 
 
 // module
-exports.push([module.i, ".Search {\n  width: 500px;\n  display: flex;\n  justify-content: space-between;\n  position: absolute;\n  top: 8px;\n  left: 8px;\n  z-index: 2;\n}\n\n.Search > form {\n  /*display: flex;\n  flex-flow: column wrap;*/\n}\n", ""]);
+exports.push([module.i, ".Search {\n  width: 412px;\n  display: flex;\n  justify-content: space-between;\n  position: absolute;\n  top: 8px;\n  left: 8px;\n  z-index: 2;\n  border: 1px outset black;\n  box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.14);\n}\n\n.Search input[type=\"text\"] {\n  width: 200px;\n}\n\n.Search input[type=\"submit\"] {\n  background-color: rgb(20, 53, 48);\n  color: white;\n  width: 412px;\n}\n\n.Search input[type=\"submit\"]:focus {\n  outline: 0;\n}\n", ""]);
 
 // exports
 
@@ -23648,12 +23637,12 @@ var Display = function (_Component) {
           _react2.default.createElement(
             'p',
             null,
-            'Enter two addresses and hit \'Submit\' for a list of nearby agencies.'
+            'Enter two addresses and hit \'Run Search\' for a list of nearby agencies.'
           ),
           _react2.default.createElement(
             'p',
             null,
-            'Results will render on the map, and will be sorted and displayed below.'
+            'Results will render on the map, and will be sorted below by ascending sum distance.'
           ),
           _react2.default.createElement(
             'p',

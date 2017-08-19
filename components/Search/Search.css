@@ -1,14 +1,25 @@
 .Search {
-  width: 500px;
+  width: 412px;
   display: flex;
   justify-content: space-between;
   position: absolute;
   top: 8px;
   left: 8px;
   z-index: 2;
+  border: 1px outset black;
+  box-shadow: 0px 0px 14px 3px rgba(0,0,0,0.14);
 }
 
-.Search > form {
-  /*display: flex;
-  flex-flow: column wrap;*/
+.Search input[type="text"] {
+  width: 200px;
+}
+
+.Search input[type="submit"] {
+  background-color: rgb(20, 53, 48);
+  color: white;
+  width: 412px;
+}
+
+.Search input[type="submit"]:focus {
+  outline: 0;
 }
