@@ -18,12 +18,6 @@ class App extends Component {
   }
 
   updateAddress(addressA, addressB) {
-    // if (address.id === 'addressA') {
-    //   this.setState({addressA: address.place});
-    // } else {
-    //   this.setState({addressB: address.place});
-    // }
-    console.log('we updated the address');
     this.setState({
       addressA: addressA,
       addressB: addressB
@@ -32,9 +26,6 @@ class App extends Component {
 
   runSearch() {
     this.map.runSearch();
-    // if (this.state.addressA && this.state.addressB) {
-    // }
-    // ev.preventDefault();
   }
 
   broadcastResults(agencies) {
