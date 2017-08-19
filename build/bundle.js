@@ -23589,16 +23589,6 @@ var Display = function (_Component) {
   }
 
   _createClass(Display, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      this.show = true;
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps() {
-      this.show = false;
-    }
-  }, {
     key: 'metersToMiles',
     value: function metersToMiles(value) {
       return (value * 0.000621371).toFixed(1);
