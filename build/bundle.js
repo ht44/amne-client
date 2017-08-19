@@ -23646,7 +23646,7 @@ var Display = function (_Component) {
           _react2.default.createElement(
             'p',
             null,
-            'If a result is not hyperlinked, that means that the business listing on Google did not include a website URL.'
+            'If a result is not hyperlinked, that means that the business listing on Google didn\'t have a website URL.'
           )
         ),
         _react2.default.createElement(
