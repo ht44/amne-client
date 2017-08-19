@@ -26,13 +26,8 @@ class Map extends Component {
           position: google.maps.ControlPosition.LEFT_CENTER
       },
       scaleControl: true,
-      // streetViewControl: true,
-      // streetViewControlOptions: {
-      //     position: google.maps.ControlPosition.LEFT_TOP
-      // },
       fullscreenControl: false
     });
-    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input)
     this.bounds = new google.maps.LatLngBounds();
     this.places = new google.maps.places.PlacesService(this.map);
 

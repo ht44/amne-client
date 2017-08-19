@@ -17,19 +17,24 @@ class App extends Component {
     this.broadcastResults = this.broadcastResults.bind(this);
   }
 
-  updateAddress(address) {
-    if (address.id === 'addressA') {
-      this.setState({addressA: address.place});
-    } else {
-      this.setState({addressB: address.place});
-    }
+  updateAddress(addressA, addressB) {
+    // if (address.id === 'addressA') {
+    //   this.setState({addressA: address.place});
+    // } else {
+    //   this.setState({addressB: address.place});
+    // }
+    console.log('we updated the address');
+    this.setState({
+      addressA: addressA,
+      addressB: addressB
+    });
   }
 
-  runSearch(ev) {
-    if (this.state.addressA && this.state.addressB) {
-      this.map.runSearch();
-    }
-    ev.preventDefault();
+  runSearch() {
+    this.map.runSearch();
+    // if (this.state.addressA && this.state.addressB) {
+    // }
+    // ev.preventDefault();
   }
 
   broadcastResults(agencies) {
@@ -82,6 +87,7 @@ class App extends Component {
       <div className="App">
         <div className="controller">
           <Search
+            ref={instance => { this.controller = instance; }}
             runSearch={this.runSearch}
             updateAddress={this.updateAddress}/>
           <Map

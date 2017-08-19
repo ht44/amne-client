@@ -9,4 +9,5 @@
 .controller {
   height: 100vh;
   width: 80vw;
+  min-width: 550px;
 }

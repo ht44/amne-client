@@ -7,6 +7,9 @@ class Search extends Component {
 
     const _this = this;
 
+    this.addressA = null;
+    this.addressB = null;
+
     this.inputA = new google.maps.places.Autocomplete(this.inputA, {
       types: ['address']
     });
@@ -16,25 +19,47 @@ class Search extends Component {
     });
 
     this.inputA.addListener('place_changed', function() {
-      _this.props.updateAddress({
+      _this.updateAddress({
         id: 'addressA',
         place: this.getPlace()
       })
+      _this.props.updateAddress(_this.addressA, _this.addressB);
     });
 
     this.inputB.addListener('place_changed', function() {
-      _this.props.updateAddress({
+
+      _this.updateAddress({
         id: 'addressB',
         place: this.getPlace()
       });
+      _this.props.updateAddress(_this.addressA, _this.addressB);
     });
 
+  }
+
+  updateAddress(address) {
+    if (address.id === 'addressA') {
+      this.addressA = address.place;
+    } else {
+      this.addressB = address.place;
+    }
+  }
+
+  submit(ev) {
+    if (this.addressA && this.addressB) {
+      this.props.runSearch();
+      this.addressA = null;
+      this.addressB = null;
+      this.inputA.value = null;
+      this.inputB.value = null;
+    }
+    ev.preventDefault();
   }
 
   render() {
     return (
       <div className="Search">
-        <form onSubmit={ev => this.props.runSearch(ev)}>
+        <form onSubmit={ev => this.submit(ev)}>
           <input
             type="text"
             name="inputA"
