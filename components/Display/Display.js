@@ -3,17 +3,9 @@ import './Display.css';
 
 class Display extends Component {
 
-  componentWillMount() {
-    this.show = true;
-  }
-  componentWillReceiveProps() {
-    this.show = false;
-  }
-
   metersToMiles(value) {
     return (value * 0.000621371).toFixed(1);
   }
-
 
   render() {
     const results = this.props.results.map(result =>
